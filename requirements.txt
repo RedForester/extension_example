@@ -1,0 +1,3 @@
+requests==2.19.1
+rf-client==0.107
+tornado==5.1.1
