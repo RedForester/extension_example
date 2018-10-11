@@ -7,6 +7,7 @@ from config import EXT_PROXY_BASE_URL, USER_COOKIE, EXT_BASE_URL, EXT_PORT
 
 
 def run():
+    # make a call to the RedForester to register this extension
     resp = requests.post(f'{EXT_PROXY_BASE_URL}/extensions', json={
         "name": "test-extension",
         "description": "test extension description",
