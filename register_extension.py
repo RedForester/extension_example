@@ -25,9 +25,9 @@ def run():
     })
     if resp.status_code == 200:
         data = resp.json()
-        print(f"success, extension id = {data['data']['id']}")
+        print(f"success, extension data = {data}")
     else:
-        print(f"error, status code = {resp.status_code}, message = {resp.text()}")
+        print(f"error, status code = {resp.status_code}, message = {resp.text}")
 
 
 if __name__ == '__main__':
