@@ -3,7 +3,7 @@ import logging
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application
 from rf_client import MindMap, set_config
-from config import RF_BACKEND_BASE_URL, EXT_PORT
+from config import RF_BACKEND_BASE_URL, EXT_PORT, EXT_ADDRESS
 
 
 class MapsHandler(RequestHandler):
@@ -52,7 +52,7 @@ class HelloWorldCommandHandler(RequestHandler):
         """
 
         # User session, that allows to send notifications back to the user interface in the browser
-        session = self.request.headers['Session-Id']
+        session = self.request.headers.get('Session-Id')
 
         # Extension token, that allows the extension to access the RedForester API.
         # It will works, while this request is running and for some amount of time after.
@@ -69,20 +69,37 @@ class HelloWorldCommandHandler(RequestHandler):
 
         # Load whole map by map_id to get node title
         # TODO method for loading single node
-        async with MindMap(map_id, extension_token=token) as mm:
-            node = mm.get(node_id)
-            node_title = node.body.properties.global_['title']
+        # TODO support from MindMap
+        # async with MindMap(map_id) as mm:
+        #     node = mm.get(node_id)
+        #     node_title = node.body.properties.global_['title']
 
         # Build response
+        node_title = 'Not ready yet..'
         self.finish({
             'data': {
                 'notify': {
                     'userId': user_id,
                     'session': session,
-                    'content': f'Hello, RedForester! user = {user_id}, map = {map_id}, node = {node_id}, node title = {node_title}',
+                    'content': f'Hello, RedForester! user = {user_id}, map = {map_id}, node = {node_title} (id: {node_id})',
                     'style': 'SUCCESS'
                 }
             }
+        })
+
+
+class FailingHelloWorldCommandHandler(RequestHandler):
+    async def post(self):
+        """
+        This is an another command handler example, that always terminates with error.
+        """
+
+        status, code = 400, 100
+
+        self.set_status(status)
+        self.finish({
+            'code': code,  # TODO error code system support
+            'message': f'something failed with code {code}'
         })
 
 
@@ -97,10 +114,13 @@ def run():
     # init tornado handlers
     app = Application([
         (r'/api/maps/(.+)', MapsHandler),
-        (r'/api/commands/is_alive', IsAliveCommandHandler),
+        (r'/api/is-alive', IsAliveCommandHandler),
         (r'/api/commands/hello-world', HelloWorldCommandHandler),
+        (r'/api/commands/failing-hello-world', FailingHelloWorldCommandHandler),
     ])
-    app.listen(EXT_PORT)
+    app.listen(EXT_PORT, EXT_ADDRESS)
+    logging.info(f'Run on {EXT_ADDRESS}:{EXT_PORT}')
+
     IOLoop.current().start()
 
 

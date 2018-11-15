@@ -1,6 +1,6 @@
 import requests
 
-from config import EXT_PROXY_BASE_URL, USER_COOKIE, EXT_BASE_URL, EXT_PORT
+from config import *
 
 
 # todo move to RedForester UI
@@ -9,23 +9,27 @@ from config import EXT_PROXY_BASE_URL, USER_COOKIE, EXT_BASE_URL, EXT_PORT
 def run():
     # make a call to the RedForester to register this extension
     resp = requests.post(f'{EXT_PROXY_BASE_URL}/extensions', json={
-        "name": "test-extension",
-        "description": "test extension description",
+        "name": EXT_NAME,
+        "description": EXT_DESCRIPTION,
         "baseUrl": f"http://{EXT_BASE_URL}:{EXT_PORT}",
-        "email": "test@localhost",
+        "email": EXT_EMAIL,
         "commands": [
             {
                 "name": "Hello, World!",
                 "id": "hello-world",
-                "description": "test command description"
+                "description": "Simple test command description"
+            },
+            {
+                "name": "Failed 'Hello, World!'",
+                "id": "failing-hello-world",
+                "description": "Always failing command"
             }
         ]
     }, headers={
         'Cookie': USER_COOKIE
     })
-    if resp.status_code == 200:
-        data = resp.json()
-        print(f"success, extension data = {data}")
+    if resp.ok:
+        print(f"success, extension data = {resp.json()}")
     else:
         print(f"error, status code = {resp.status_code}, message = {resp.text}")
 
