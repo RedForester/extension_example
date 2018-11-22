@@ -3,15 +3,12 @@ import requests
 from config import *
 
 
-# todo move to RedForester UI
-
-
-def run():
+def register_extension():
     # make a call to the RedForester to register this extension
     resp = requests.post(f'{EXT_PROXY_BASE_URL}/extensions', json={
         "name": EXT_NAME,
         "description": EXT_DESCRIPTION,
-        "baseUrl": f"http://{EXT_BASE_URL}:{EXT_PORT}",
+        "baseUrl": f"{EXT_BASE_URL}",
         "email": EXT_EMAIL,
         "commands": [
             {
@@ -35,4 +32,4 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    register_extension()

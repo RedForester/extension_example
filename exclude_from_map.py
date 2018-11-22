@@ -1,26 +1,24 @@
-# This is temporary way to assign extension to your map
-
 import requests
 
 from config import EXT_PROXY_BASE_URL, USER_COOKIE
 
 
-def assign_to_map(map_id, extension_id):
-    resp = requests.post(
+def exclude_from_map(map_id, extension_id):
+    resp = requests.delete(
         f'{EXT_PROXY_BASE_URL}/extensions/{extension_id}/maps/{map_id}/assign',
-        json={},
         headers={
             'Cookie': USER_COOKIE
         }
     )
-    if not resp.ok:
-        print('Exception:')
+
+    if resp.ok:
+        print('Extension excluded from map')
 
     print(resp.json())
+
 
 if __name__ == '__main__':
     map_id = ""
     extension_id = ""
 
-    assign_to_map(map_id=map_id,
-        extension_id=extension_id)
+    exclude_from_map(map_id, extension_id)

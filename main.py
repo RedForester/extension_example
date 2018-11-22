@@ -18,7 +18,14 @@ class MapsHandler(RequestHandler):
         that the extension is up and works.
         :param map_id: id of the map
         """
-        logging.info(f'Extension assigned to map with id {map_id}')
+
+        # This is persistence extension user token. It allow to use RF API from special user (with limitations),
+        #  listen event queue.
+        # !!! This is single chance to get service token.
+        service_token = self.request.headers['Rf-Extension-Token']
+
+        logging.info(f'Extension assigned to map with id {map_id}, service token: {service_token}')
+
         self.finish()
 
     def delete(self, map_id):
@@ -31,6 +38,7 @@ class MapsHandler(RequestHandler):
         :param map_id: id of the map
         """
         logging.info(f'Extension deleted from map with id {map_id}')
+
         self.finish()
 
 
@@ -54,9 +62,9 @@ class HelloWorldCommandHandler(RequestHandler):
         # User session, that allows to send notifications back to the user interface in the browser
         session = self.request.headers.get('Session-Id')
 
-        # Extension token, that allows the extension to access the RedForester API.
-        # It will works, while this request is running and for some amount of time after.
-        token = self.request.headers['Rf-Extension-Token']
+        # Temporary user token, that allows the extension to access the RedForester API.
+        # It will works, while this request is running and will be revoked after request termination.
+        user_token = self.request.headers['Rf-Extension-Token']
 
         # Id of the user, that started this command.
         user_id = self.get_query_argument('userId')
@@ -67,15 +75,15 @@ class HelloWorldCommandHandler(RequestHandler):
         # Id of the node, on which this command was called.
         node_id = self.get_query_argument('nodeId')
 
-        # Load whole map by map_id to get node title
+        logging.info(f'user_token : {user_token}, user_id: {user_id}, map_id: {map_id}, node_id: {node_id}')
+
+        # Load whole map by map_id to get single node title
         # TODO method for loading single node
-        # TODO support from MindMap
-        # async with MindMap(map_id) as mm:
-        #     node = mm.get(node_id)
-        #     node_title = node.body.properties.global_['title']
+        async with MindMap(map_id, ('extension', user_token)) as mm:
+            node = mm.get(node_id)
+            node_title = node.body.properties.global_['title']
 
         # Build response
-        node_title = 'Not ready yet..'
         self.finish({
             'data': {
                 'notify': {
