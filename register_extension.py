@@ -5,10 +5,10 @@ from config import *
 
 def register_extension():
     # make a call to the RedForester to register this extension
-    resp = requests.post(f'{EXT_PROXY_BASE_URL}/extensions', json={
+    resp = requests.post(f'{RF_BACKEND_BASE_URL}/extensions', json={
         "name": EXT_NAME,
         "description": EXT_DESCRIPTION,
-        "baseUrl": f"{EXT_BASE_URL}",
+        "baseUrl": EXT_BASE_URL,
         "email": EXT_EMAIL,
         "commands": [
             {

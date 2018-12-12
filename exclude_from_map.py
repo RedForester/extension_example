@@ -1,11 +1,11 @@
 import requests
 
-from config import EXT_PROXY_BASE_URL, USER_COOKIE
+from config import RF_BACKEND_BASE_URL, USER_COOKIE
 
 
 def exclude_from_map(map_id, extension_id):
     resp = requests.delete(
-        f'{EXT_PROXY_BASE_URL}/extensions/{extension_id}/maps/{map_id}/assign',
+        f'{RF_BACKEND_BASE_URL}/extensions/{extension_id}/maps/{map_id}/assign',
         headers={
             'Cookie': USER_COOKIE
         }

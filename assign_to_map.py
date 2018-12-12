@@ -2,12 +2,12 @@
 
 import requests
 
-from config import EXT_PROXY_BASE_URL, USER_COOKIE
+from config import RF_BACKEND_BASE_URL, USER_COOKIE
 
 
 def assign_to_map(map_id, extension_id):
     resp = requests.post(
-        f'{EXT_PROXY_BASE_URL}/extensions/{extension_id}/maps/{map_id}/assign',
+        f'{RF_BACKEND_BASE_URL}/extensions/{extension_id}/maps/{map_id}/assign',
         json={},
         headers={
             'Cookie': USER_COOKIE

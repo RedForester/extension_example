@@ -2,7 +2,7 @@ import logging
 
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application
-from rf_client import MindMap, set_config
+from rf_client import MindMap, set_config, Node
 from config import RF_BACKEND_BASE_URL, EXT_PORT, EXT_ADDRESS
 
 
@@ -80,7 +80,7 @@ class HelloWorldCommandHandler(RequestHandler):
         # Load whole map by map_id to get single node title
         # TODO method for loading single node
         async with MindMap(map_id, ('extension', user_token)) as mm:
-            node = mm.get(node_id)
+            node: Node = mm.get(node_id)
             node_title = node.body.properties.global_['title']
 
         # Build response

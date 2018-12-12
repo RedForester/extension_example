@@ -1,10 +1,10 @@
 import requests
 
-from config import USER_COOKIE, EXT_PROXY_BASE_URL
+from config import USER_COOKIE, RF_BACKEND_BASE_URL
 
 
 def call_command(map_id, node_id, extension_id, command_id):
-    resp = requests.post(f'{EXT_PROXY_BASE_URL}/extensions/{extension_id}/maps/{map_id}/command', json={
+    resp = requests.post(f'{RF_BACKEND_BASE_URL}/extensions/{extension_id}/maps/{map_id}/command', json={
         "commandId": command_id,
         "nodeId": node_id
     }, headers={
