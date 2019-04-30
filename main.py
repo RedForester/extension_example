@@ -1,4 +1,5 @@
 import logging
+import requests
 
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application
@@ -85,13 +86,11 @@ class HelloWorldCommandHandler(RequestHandler):
 
         # Build response
         self.finish({
-            'data': {
-                'notify': {
-                    'userId': user_id,
-                    'session': session,
-                    'content': f'Hello, RedForester! user = {user_id}, map = {map_id}, node = {node_title} (id: {node_id})',
-                    'style': 'SUCCESS'
-                }
+            'notify': {
+                'userId': user_id,
+                'session': session,
+                'content': f'Hello, RedForester! user = {user_id}, map = {map_id}, node = {node_title} (id: {node_id})',
+                'style': 'SUCCESS'
             }
         })
 

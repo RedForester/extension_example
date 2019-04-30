@@ -13,12 +13,16 @@ def register_extension():
         "commands": [
             {
                 "name": "Hello, World!",
-                "id": "hello-world",
+                "type": {
+                    "action": "hello-world",
+                },
                 "description": "Simple test command description"
             },
             {
                 "name": "Failed 'Hello, World!'",
-                "id": "failing-hello-world",
+                "type": {
+                    "action": "failing-hello-world",
+                },
                 "description": "Always failing command"
             }
         ]
