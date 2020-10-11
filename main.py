@@ -61,7 +61,7 @@ class HelloWorldCommandHandler(RequestHandler):
         """
 
         # User session, that allows to send notifications back to the user interface in the browser
-        session = self.request.headers.get('Session-Id')
+        session = self.request.headers.get('Rf-Session-Id')
 
         # Temporary user token, that allows the extension to access the RedForester API.
         # It will works, while this request is running and will be revoked after request termination.
