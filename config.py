@@ -1,5 +1,5 @@
 # base url of the RedForester API
-RF_BACKEND_BASE_URL = "https://app.redforester.com/api"
+RF_BACKEND_BASE_URL = "https://app.redforester.com"
 
 ########################################################
 # addres and port, at which this extension is listening

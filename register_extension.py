@@ -40,7 +40,7 @@ def register_extension():
     )
 
     # make a call to the RedForester to register this extension
-    resp = requests.post(f'{RF_BACKEND_BASE_URL}/extensions', json=ext, auth=auth)
+    resp = requests.post(f'{RF_BACKEND_BASE_URL}/api/extensions', json=ext, auth=auth)
 
     if resp.ok:
         print(f"success, extension data = {resp.json()}")
