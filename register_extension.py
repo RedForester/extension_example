@@ -1,34 +1,47 @@
+import hashlib
+
 import requests
+from requests.auth import HTTPBasicAuth
 
 from config import *
 
 
-def register_extension():
-    # make a call to the RedForester to register this extension
-    resp = requests.post(f'{RF_BACKEND_BASE_URL}/extensions', json={
-        "name": EXT_NAME,
-        "description": EXT_DESCRIPTION,
-        "baseUrl": EXT_BASE_URL,
-        "email": EXT_EMAIL,
-        "commands": [
-            {
-                "name": "Hello, World!",
-                "type": {
-                    "action": "hello-world",
-                },
-                "description": "Simple test command description"
+ext = {
+    "name": EXT_NAME,
+    "description": EXT_DESCRIPTION,
+    "baseUrl": EXT_BASE_URL,
+    "email": EXT_EMAIL,
+    "commands": [
+        {
+            "name": "Hello, World!",
+            "type": {
+                "action": "hello-world",
             },
-            {
-                "name": "Failed 'Hello, World!'",
-                "type": {
-                    "action": "failing-hello-world",
-                },
-                "description": "Always failing command"
-            }
-        ]
-    }, headers={
-        'Cookie': USER_COOKIE
-    })
+            "description": "Simple test command description"
+        },
+        {
+            "name": "Failed 'Hello, World!'",
+            "type": {
+                "action": "failing-hello-world",
+            },
+            "description": "Always failing command"
+        }
+    ]
+}
+
+
+def register_extension():
+    username = input("username:")
+    password = input("password:")
+
+    auth = HTTPBasicAuth(
+        username,
+        hashlib.md5(password.encode()).hexdigest()
+    )
+
+    # make a call to the RedForester to register this extension
+    resp = requests.post(f'{RF_BACKEND_BASE_URL}/extensions', json=ext, auth=auth)
+
     if resp.ok:
         print(f"success, extension data = {resp.json()}")
     else:
