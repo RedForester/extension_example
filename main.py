@@ -1,9 +1,12 @@
 import logging
-import requests
+from rf_api_client.rf_api_client import ExtensionAuth
 
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application
-from rf_client import MindMap, set_config, Node
+from rf_api_client import RfApiClient
+from rf_client import RfClient
+from yarl import URL
+
 from config import RF_BACKEND_BASE_URL, EXT_PORT, EXT_ADDRESS
 
 
@@ -61,7 +64,7 @@ class HelloWorldCommandHandler(RequestHandler):
         """
 
         # User session, that allows to send notifications back to the user interface in the browser
-        session = self.request.headers.get('Session-Id')
+        session = self.request.headers.get('Rf-Session-Id')
 
         # Temporary user token, that allows the extension to access the RedForester API.
         # It will works, while this request is running and will be revoked after request termination.
@@ -78,11 +81,12 @@ class HelloWorldCommandHandler(RequestHandler):
 
         logging.info(f'user_token : {user_token}, user_id: {user_id}, map_id: {map_id}, node_id: {node_id}')
 
-        # Load whole map by map_id to get single node title
-        # TODO method for loading single node
-        async with MindMap(map_id, ('extension', user_token)) as mm:
-            node: Node = mm.get(node_id)
-            node_title = node.body.properties.global_['title']
+        api = RfApiClient(auth=ExtensionAuth(user_token), session_id=session, base_url=URL(RF_BACKEND_BASE_URL))
+
+        async with RfClient(api) as rf:
+            map_ = await rf.maps.load_map(map_id=map_id)
+            node = map_.tree.find_by_id(node_id)
+            node_title = node.body.properties.global_.title
 
         # Build response
         self.finish({
@@ -114,9 +118,6 @@ def run():
     logging.basicConfig(
         level=logging.DEBUG
     )
-
-    # set base url of the RedForester API
-    set_config(RF_BACKEND_BASE_URL)
 
     # init tornado handlers
     app = Application([
