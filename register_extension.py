@@ -17,14 +17,20 @@ ext = {
             "type": {
                 "action": "hello-world",
             },
-            "description": "Simple test command description"
+            "description": "Simple test command description",
+            "showRules": [{
+                "allNodes": True,
+            }],
         },
         {
             "name": "Failed 'Hello, World!'",
             "type": {
                 "action": "failing-hello-world",
             },
-            "description": "Always failing command"
+            "description": "Always failing command",
+            "showRules": [{
+                "allNodes": True,
+            }],
         }
     ]
 }
