@@ -47,7 +47,7 @@ class MapsHandler(RequestHandler):
 
 
 class IsAliveCommandHandler(RequestHandler):
-    def post(self):
+    def get(self):
         """
         This is a command handler. It will be called only at the extension registration to verify,
         that the extension is up and works.
