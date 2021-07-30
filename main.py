@@ -49,9 +49,9 @@ class MapsHandler(RequestHandler):
 class IsAliveCommandHandler(RequestHandler):
     def get(self):
         """
-        This is a command handler. It will be called only at the extension registration to verify,
-        that the extension is up and works.
-        It must return status 200, if the extension is works.
+        This is a special handler. It will be called before extension registration and before extension update
+         to verify, that the extension is up and works.
+        It must return status 200.
         """
         self.finish()
 
@@ -63,7 +63,8 @@ class HelloWorldCommandHandler(RequestHandler):
         at which it was called.
         """
 
-        # User session, that allows to send notifications back to the user interface in the browser
+        # A session in general used to distinguish web app instances of a single user.
+        # In this case it allows to send notifications back to the specific web app that called this extension
         session = self.request.headers.get('Rf-Session-Id')
 
         # Temporary user token, that allows the extension to access the RedForester API.
